@@ -12,8 +12,8 @@ class Output:
         while True:
 
             # Select method video or image
-            #ret, image = cap.read()
-            image = cv2.imread('./1_1.jpg')
+            ret, image = cap.read()
+            #image = cv2.imread('./1_1.jpg')
 
             try:
                 # Aruco setup
