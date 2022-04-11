@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import random
 from decorators import size_checker, text_size
 from connect import db_connect, target_color, target_name, tolerance_measurement
 from math import sqrt
@@ -14,7 +13,7 @@ class Output:
 
             # Select method video or image
             #ret, image = cap.read()
-            image = cv2.imread('C:\\Users\\yura0\\Desktop\\1_1.jpg')
+            image = cv2.imread('./1_1.jpg')
 
             try:
                 # Aruco setup
@@ -74,7 +73,7 @@ class Output:
                 # Convert px to radius in cm
                 object_radius = round(((r / pixel_cm_ratio) / 2.1), 2)
                 cv2.putText(image,
-                            f"R{str(object_radius)} cm | {random.randint(1, 5)}",
+                            f"R{str(object_radius)} cm",
                             (int(int(size_checker(int(y), int(r), int(x))[1])),
                              int(size_checker(int(y), int(r), int(x))[0])),
                             cv2.FONT_HERSHEY_SIMPLEX,

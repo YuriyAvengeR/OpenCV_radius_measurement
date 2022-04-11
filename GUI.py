@@ -15,7 +15,7 @@ class Ui_MainWindow(object):
         zero_init()
 
     def delete_from_db(self):
-        sqlite_file = 'C:\\Users\\yura0\\Desktop\\measurement_system\\ObjectDB.db'
+        sqlite_file = './ObjectDB.db'
         db = sqlite3.connect(sqlite_file)
         sql = db.cursor()
         spinBoxValue = self.ComSelectBox_2.value()
@@ -53,7 +53,7 @@ class Ui_MainWindow(object):
 
 
     def discard(self):
-        sqlite_file = 'C:\\Users\\yura0\\Desktop\\measurement_system\\ObjectDB.db'
+        sqlite_file = './ObjectDB.db'
         db = sqlite3.connect(sqlite_file)
         sql = db.cursor()
         sql.execute(f'UPDATE current SET Ind = "0" WHERE status = {int(25)}')
@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         self.textBrowser.setText('Ruller mode is now active.')
 
     def db_load(self):
-        sqlite_file = 'C:\\Users\\yura0\\Desktop\\measurement_system\\ObjectDB.db'
+        sqlite_file = './ObjectDB.db'
         spinBoxValue = self.ComSelectBox_2.value()
         if int(spinBoxValue) == 0:
             db = sqlite3.connect(sqlite_file)
@@ -115,7 +115,7 @@ class Ui_MainWindow(object):
                 text_tol = self.textEdit_3.toPlainText()
                 text_comm = self.textEdit_4.toPlainText()
 
-                sqlite_file = 'C:\\Users\\yura0\\Desktop\\measurement_system\\ObjectDB.db'
+                sqlite_file = './ObjectDB.db'
                 db = sqlite3.connect(sqlite_file)
                 sql = db.cursor()
                 sql.execute(f'SELECT Name FROM objects WHERE Name = "{text_name}"')
