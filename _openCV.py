@@ -96,7 +96,6 @@ class Output:
                         time.sleep(0.01)
                 except(ValueError):
                     radius_list.clear()
-                    #time.sleep(0.01)
 
                 # Init current data about object
                 obj_size = db_connect()[1]
@@ -132,5 +131,5 @@ class Output:
     cv2.destroyAllWindows()
 
 # Run without main
-#a = Output().frame()
+a = Output().frame()
 

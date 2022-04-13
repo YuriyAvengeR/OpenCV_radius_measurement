@@ -1,7 +1,27 @@
-import random
 import sqlite3
+from sqlite3 import *
 import datetime
-import time
+
+def create_db(db_file):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+    except Error as e:
+        pass
+    finally:
+        if conn:
+            sql = conn.cursor()
+            conn.execute("CREATE TABLE IF NOT EXISTS objects (ID INTEGER, Name TEXT, Size REAL, Tol REAL, Comment TEXT)")
+            conn.execute("CREATE TABLE IF NOT EXISTS current (status INTEGER, Name TEXT, Size TEXT, Tol TEXT, Ind INTEGER)")
+            conn.commit()
+            sql.execute('SELECT status FROM current')
+            index = sql.fetchone()
+            if index == None:
+                conn.execute(f"INSERT INTO current VALUES (?, ?, ?, ?, ?)", (int(25), str(0), str(0), str(0), int(0)))
+                conn.commit()
+                conn.close()
+            else:
+                conn.close()
 
 
 def db_connect():
@@ -19,10 +39,10 @@ def db_connect():
 
 def target_color():
     index = db_connect()[3]
-    if index is 0:
+    if index == 0:
         yellow_color = 53, 255, 236
         return yellow_color
-    if index is 1:
+    if index == 1:
         green_color = 107,255,53
         return green_color
     else:
@@ -32,10 +52,10 @@ def target_color():
 
 def target_name():
     index = db_connect()[3]
-    if index is 0:
+    if index == 0:
         status_name_not_found = "TNF"
         return status_name_not_found
-    if index is 1:
+    if index == 1:
         status_name_found = "TCF"
         return status_name_found
     else:
@@ -52,7 +72,7 @@ def zero_init():
 
 def tolerance_measurement(measure_size):
     index = db_connect()[3]
-    if index is 1:
+    if index == 1:
         origin_name = db_connect()[0]
         origin_size = db_connect()[1]
         origin_tol = db_connect()[2]
@@ -69,7 +89,7 @@ def tolerance_measurement(measure_size):
             text_status = "STATUS"
             #print(measure_size)
             return text_status, status_color_green, status_time, 1
-    if index is 0:
+    if index == 0:
         status_time = datetime.datetime.now()
         status_yellow_color = 53, 255, 236
         text_status = "RULLER MODE"
@@ -88,10 +108,6 @@ def percent(x):
         return tolerance_percent, 1
     else:
         return " "
-
-
-
-l = [1.65, 2.01]
 
 def nearest(lst, target):
   return min(lst, key=lambda x: abs(x-target))

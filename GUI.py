@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import sqlite3
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QAbstractItemView
-from connect import zero_init
+from connect import zero_init, create_db
 
 class Ui_MainWindow(object):
     db_status = 0
@@ -12,7 +12,9 @@ class Ui_MainWindow(object):
         self.selected_name = "None"
         self.selected_size = 0
         self.selected_tol = 0
+        create_db(r".\ObjectDB.db")
         zero_init()
+
 
     def delete_from_db(self):
         sqlite_file = './ObjectDB.db'
@@ -135,7 +137,6 @@ class Ui_MainWindow(object):
                     self.db_tol = sql.fetchall()
                     sql.execute('SELECT Comment FROM objects')
                     self.db_com = sql.fetchall()
-                    print(self.db_names)
 
                     i = 0
                     while i != self.row_count:
