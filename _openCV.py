@@ -1,7 +1,9 @@
+import time
+
 import cv2
 import numpy as np
 from decorators import size_checker, text_size
-from connect import db_connect, target_color, target_name, tolerance_measurement
+from connect import db_connect, target_color, target_name, tolerance_measurement, percent, nearest
 from math import sqrt
 
 class Output:
@@ -9,11 +11,15 @@ class Output:
     @staticmethod
     def frame():
         cap = cv2.VideoCapture(0)
+
         while True:
 
+            radius_list = []
+            data = 0
+
             # Select method video or image
-            ret, image = cap.read()
-            #image = cv2.imread('./1_1.jpg')
+            #ret, image = cap.read()
+            image = cv2.imread('./1_1.jpg')
 
             try:
                 # Aruco setup
@@ -40,7 +46,7 @@ class Output:
             # Get origin aruco size on cm
             aruco_size = (((aruco_perimeter / pixel_cm_ratio) / 4) /2.1)
             aruco_size = (aruco_size * sqrt(2)) / 2
-            aruco_size = round(aruco_size, 2)
+            aruco_size = round(aruco_size, 3)
 
             # Picture scaling
             scale_percent = 100 # scale count
@@ -58,17 +64,16 @@ class Output:
             kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5,5))
             opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=2)
 
-            radius_list = []
-            data = 0
 
             # Find contours [main]
             cnts = cv2.findContours(opening, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             cnts = cnts[0] if len(cnts) == 2 else cnts[1]
             for c in cnts:
+                cv2.putText(image, f"  ", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (53, 255, 236), 3)
 
                 # Get Width and Height of the Objects by applying the Ratio pixel to cm
                 (x, y), r = cv2.minEnclosingCircle(c)
-                r = round(r, 2)
+                r = round(r, 3)
 
                 # Convert px to radius in cm
                 object_radius = round(((r / pixel_cm_ratio) / 2.1), 2)
@@ -79,17 +84,20 @@ class Output:
                             cv2.FONT_HERSHEY_SIMPLEX,
                             text_size(r)[0], (0, 0, 255),
                             text_size(r)[1])
-
+                print(f"{object_radius}  |  {aruco_size}")
                 # Select object to detect
                 try:
                     object_radius = round(object_radius, 2)
                     radius_list.append(object_radius)
                     list_len = len(radius_list)
+                    print(radius_list)
                     if list_len == 2:
-                        radius_list.remove(aruco_size)
+                        radius_list.remove(nearest(radius_list, aruco_size))
                         data = float(radius_list[0])
+                        time.sleep(0.01)
                 except(ValueError):
                     radius_list.clear()
+                    #time.sleep(0.01)
 
                 # Init current data about object
                 obj_size = db_connect()[1]
@@ -109,6 +117,11 @@ class Output:
                 cv2.putText(image, f"{obj_tol}", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 1, (target_color()), 3)
                 # Target measurement STATUS
                 cv2.putText(image, f"{tolerance_measurement(data)[0]}", (10, dim[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, tolerance_measurement(data)[1], 3)
+                # Measurement tolerance | %
+                if target_name() == "TNF":
+                    cv2.putText(image, f" ", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (53, 255, 236), 3)
+                if target_name() == "TCF":
+                    cv2.putText(image, f"{percent(data)[0]}", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (223, 50, 96), 3)
 
             cv2.imshow('output post processing', image)
             #cv2.imshow("thresh", thresh)
@@ -120,5 +133,5 @@ class Output:
     cv2.destroyAllWindows()
 
 # Run without main
-a = Output().frame()
+#a = Output().frame()
 

@@ -56,16 +56,18 @@ def tolerance_measurement(measure_size):
         origin_name = db_connect()[0]
         origin_size = db_connect()[1]
         origin_tol = db_connect()[2]
-        if float(measure_size) >= float(origin_size) + float(origin_tol) or float(measure_size) <= float(origin_size) - float(origin_tol):
+        if float(measure_size) > float(origin_size) + float(origin_tol) or float(measure_size) < float(origin_size) - float(origin_tol):
             status_time = datetime.datetime.now()
             status_color_red = 75, 63, 255
             text_status = "STATUS"
             log_text = f"{origin_name} A DEFECT AT {status_time}"
+            #print(f"{float(measure_size) > float(origin_size) + float(origin_tol)}, {float(measure_size) < float(origin_size) - float(origin_tol)}")
             return text_status, status_color_red, log_text, 0
-        elif float(measure_size) <= float(measure_size) + float(origin_tol) or float(measure_size) >= float(measure_size) - float(origin_tol):
+        elif float(measure_size) < float(measure_size) + float(origin_tol) or float(measure_size) > float(measure_size) - float(origin_tol):
             status_time = datetime.datetime.now()
             status_color_green = 107,255,53
             text_status = "STATUS"
+            #print(measure_size)
             return text_status, status_color_green, status_time, 1
     if index is 0:
         status_time = datetime.datetime.now()
@@ -75,10 +77,24 @@ def tolerance_measurement(measure_size):
     else:
         return "error"
 
+def percent(x):
+    if x != 0:
+        origin_size = db_connect()[1]
+        origin_size = float(origin_size)
+        mistake = (x - origin_size)
+        tolerance_percent = (mistake / origin_size) * 100
+        tolerance_percent = round(tolerance_percent, 3)
+        tolerance_percent = str(tolerance_percent)
+        return tolerance_percent, 1
+    else:
+        return " "
 
-# True:
-    #print(tolerance_measurement(1))
 
+
+l = [1.65, 2.01]
+
+def nearest(lst, target):
+  return min(lst, key=lambda x: abs(x-target))
 
 
 
