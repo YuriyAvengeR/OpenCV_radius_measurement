@@ -5,7 +5,7 @@ import time
 
 
 def db_connect():
-    sqlite_file = 'C:\\Users\\yura0\\Desktop\\measurement_system\\ObjectDB.db'
+    sqlite_file = './ObjectDB.db'
     db = sqlite3.connect(sqlite_file)
     sql = db.cursor()
     sql.execute(f"SELECT Name, Size, Tol, Ind FROM current WHERE status = {int(25)}")
@@ -42,7 +42,7 @@ def target_name():
         return "Error"
 
 def zero_init():
-    sqlite_file = 'C:\\Users\\yura0\\Desktop\\measurement_system\\ObjectDB.db'
+    sqlite_file = './ObjectDB.db'
     db = sqlite3.connect(sqlite_file)
     sql = db.cursor()
     sql.execute(f'UPDATE current SET Ind = "0" WHERE status = {int(25)}')

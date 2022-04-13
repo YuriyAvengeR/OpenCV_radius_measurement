@@ -18,8 +18,8 @@ class Output:
             data = 0
 
             # Select method video or image
-            #ret, image = cap.read()
-            image = cv2.imread('./1_1.jpg')
+            ret, image = cap.read()
+            #image = cv2.imread('./1_1.jpg')
 
             try:
                 # Aruco setup
@@ -84,13 +84,12 @@ class Output:
                             cv2.FONT_HERSHEY_SIMPLEX,
                             text_size(r)[0], (0, 0, 255),
                             text_size(r)[1])
-                print(f"{object_radius}  |  {aruco_size}")
+
                 # Select object to detect
                 try:
                     object_radius = round(object_radius, 2)
                     radius_list.append(object_radius)
                     list_len = len(radius_list)
-                    print(radius_list)
                     if list_len == 2:
                         radius_list.remove(nearest(radius_list, aruco_size))
                         data = float(radius_list[0])
