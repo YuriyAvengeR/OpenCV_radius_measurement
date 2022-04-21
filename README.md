@@ -1,4 +1,4 @@
-# OpenCV_radius_measurement
+# OpenCV radius measurements
 Software writed for graduate work.
 
 This system is designed to measure the radii of circles. For the beginning, start with run.cmd. next step, you need input your data. After, press camera button and select your object from db.
