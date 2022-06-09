@@ -44,7 +44,7 @@ class Output:
             pixel_cm_ratio = aruco_perimeter / 20
 
             # Get origin aruco size on cm
-            aruco_size = (((aruco_perimeter / pixel_cm_ratio) / 4) /2.1)
+            aruco_size = (((aruco_perimeter / pixel_cm_ratio) / 4))
             aruco_size = (aruco_size * sqrt(2)) / 2
             aruco_size = round(aruco_size, 3)
 
